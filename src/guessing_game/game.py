@@ -1,9 +1,9 @@
 import random
 
 DIFFICULTIES = {
-    "easy": 50,
-    "medium": 100,
-    "hard": 500,
+    "easy": {"upper_bound": 50, "max_attempts": 10},
+    "medium": {"upper_bound": 100, "max_attempts": 7},
+    "hard": {"upper_bound": 500, "max_attempts": 9},
 }
 
 
@@ -40,12 +40,16 @@ def check_guess(guess, secret_number):
 
 def main():
     difficulty = choose_difficulty()
-    upper_bound = DIFFICULTIES[difficulty]
+    settings = DIFFICULTIES[difficulty]
+    upper_bound = settings["upper_bound"]
+    max_attempts = settings["max_attempts"]
+
     secret_number = pick_number(upper_bound)
     attempts = 0
     print(f"I'm thinking of a number between 1 and {upper_bound}.")
+    print(f"You have {max_attempts} attempts.")
 
-    while True:
+    while attempts < max_attempts:
         guess = get_guess()
         attempts += 1
         result = check_guess(guess, secret_number)
@@ -57,7 +61,13 @@ def main():
         else:
             word = "attempt" if attempts == 1 else "attempts"
             print(f"You got it in {attempts} {word}!")
-            break
+            return
+
+        remaining = max_attempts - attempts
+        if remaining > 0:
+            print(f"{remaining} left.")
+
+    print(f"Out of attempts! The number was {secret_number}.")
 
 
 if __name__ == "__main__":
