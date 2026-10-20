@@ -3,6 +3,7 @@
 import random
 
 from scores import get_best_score, update_best_score
+from ui import error, info, success, warning
 
 DIFFICULTIES: dict[str, dict[str, int]] = {
     "easy": {"upper_bound": 50, "max_attempts": 10},
@@ -27,7 +28,7 @@ def choose_difficulty() -> str:
         choice = input("Enter 1, 2, or 3: ")
         if choice in choices:
             return choices[choice]
-        print("Please enter 1, 2, or 3.")
+        error("Please enter 1, 2, or 3.")
 
 
 def pick_number(upper_bound: int) -> int:
@@ -48,17 +49,17 @@ def get_guess(upper_bound: int) -> int:
         raw = input("Your guess: ").strip()
 
         if not raw:
-            print("Please enter a number.")
+            error("Please enter a number.")
             continue
 
         try:
             guess = int(raw)
         except ValueError:
-            print("That's not a whole number. Try again.")
+            error("That's not a whole number. Try again.")
             continue
 
         if not 1 <= guess <= upper_bound:
-            print(f"Please enter a number between 1 and {upper_bound}.")
+            error(f"Please enter a number between 1 and {upper_bound}.")
             continue
 
         return guess
@@ -92,11 +93,11 @@ def play_round() -> None:
 
     secret_number = pick_number(upper_bound)
     attempts = 0
-    print(f"I'm thinking of a number between 1 and {upper_bound}.")
-    print(f"You have {max_attempts} attempts.")
+    info(f"I'm thinking of a number between 1 and {upper_bound}.")
+    info(f"You have {max_attempts} attempts.")
     best = get_best_score(difficulty)
     if best is not None:
-        print(f"Best score on {difficulty}: {best}")
+        info(f"Best score on {difficulty}: {best}")
 
     while attempts < max_attempts:
         guess = get_guess(upper_bound)
@@ -104,21 +105,21 @@ def play_round() -> None:
         result = check_guess(guess, secret_number)
 
         if result == "low":
-            print("Too low!")
+            warning("Too low!")
         elif result == "high":
-            print("Too high!")
+            warning("Too high!")
         else:
             word = "attempt" if attempts == 1 else "attempts"
-            print(f"You got it in {attempts} {word}!")
+            success(f"You got it in {attempts} {word}!")
             if update_best_score(difficulty, attempts):
-                print("New high score!")
+                success("New high score!")
             return
 
         remaining = max_attempts - attempts
         if remaining > 0:
-            print(f"{remaining} left.")
+            info(f"{remaining} left.")
 
-    print(f"Out of attempts! The number was {secret_number}.")
+    error(f"Out of attempts! The number was {secret_number}.")
 
 
 def ask_play_again() -> bool:
@@ -133,16 +134,16 @@ def ask_play_again() -> bool:
             return True
         if answer in ("n", "no"):
             return False
-        print("Please enter y or n.")
+        error("Please enter y or n.")
 
 
 def main() -> None:
     """Run the game: play rounds until the player chooses to stop."""
-    print("Welcome to the Number Guessing Game!")
+    info("Welcome to the Number Guessing Game!")
     while True:
         play_round()
         if not ask_play_again():
-            print("Thanks for playing. Goodbye!")
+            info("Thanks for playing. Goodbye!")
             break
 
 
