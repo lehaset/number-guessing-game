@@ -25,8 +25,25 @@ def pick_number(upper_bound):
     return random.randint(1, upper_bound)
 
 
-def get_guess():
-    return int(input("Your guess: "))
+def get_guess(upper_bound):
+    while True:
+        raw = input("Your guess: ").strip()
+
+        if not raw:
+            print("Please enter a number.")
+            continue
+
+        try:
+            guess = int(raw)
+        except ValueError:
+            print("That's not a whole number. Try again.")
+            continue
+
+        if not 1 <= guess <= upper_bound:
+            print(f"Please enter a number between 1 and {upper_bound}.")
+            continue
+
+        return guess
 
 
 def check_guess(guess, secret_number):
@@ -50,7 +67,7 @@ def main():
     print(f"You have {max_attempts} attempts.")
 
     while attempts < max_attempts:
-        guess = get_guess()
+        guess = get_guess(upper_bound)
         attempts += 1
         result = check_guess(guess, secret_number)
 
