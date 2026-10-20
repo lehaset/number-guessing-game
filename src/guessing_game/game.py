@@ -55,7 +55,7 @@ def check_guess(guess, secret_number):
         return "correct"
 
 
-def main():
+def play_round():
     difficulty = choose_difficulty()
     settings = DIFFICULTIES[difficulty]
     upper_bound = settings["upper_bound"]
@@ -85,6 +85,24 @@ def main():
             print(f"{remaining} left.")
 
     print(f"Out of attempts! The number was {secret_number}.")
+
+def ask_play_again():
+    while True:
+        answer = input("Play again? (y/n): ").strip().lower()
+        if answer in ("y", "yes"):
+            return True
+        if answer in ("n", "no"):
+            return False
+        print("Please enter y or n.")
+
+
+def main():
+    print("Welcome to the Number Guessing Game!")
+    while True:
+        play_round()
+        if not ask_play_again():
+            print("Thanks for playing. Goodbye!")
+            break
 
 
 if __name__ == "__main__":
