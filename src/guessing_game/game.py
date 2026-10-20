@@ -1,5 +1,5 @@
 """Core gameplay for the Number Guessing Game."""
-
+from typing import Optional
 import random
 
 from guessing_game.scores import get_best_score, update_best_score
@@ -84,12 +84,23 @@ def check_guess(guess: int, secret_number: int) -> str:
         return "correct"
 
 
-def play_round() -> None:
-    """Play one full round: choose difficulty, then guess until win or loss."""
-    difficulty = choose_difficulty()
+def play_round(
+    difficulty: Optional[str] = None,
+    max_attempts: Optional[int] = None,
+) -> None:
+    """Play one full round: guess until win or loss.
+
+    Args:
+        difficulty: "easy", "medium", or "hard". If None, ask the player.
+        max_attempts: Override the difficulty's attempt limit. If None,
+            use the difficulty's default.
+    """
+    if difficulty is None:
+        difficulty = choose_difficulty()
     settings = DIFFICULTIES[difficulty]
     upper_bound = settings["upper_bound"]
-    max_attempts = settings["max_attempts"]
+    if max_attempts is None:
+        max_attempts = settings["max_attempts"]
 
     secret_number = pick_number(upper_bound)
     attempts = 0
@@ -121,7 +132,6 @@ def play_round() -> None:
 
     error(f"Out of attempts! The number was {secret_number}.")
 
-
 def ask_play_again() -> bool:
     """Ask whether to play another round.
 
@@ -137,11 +147,20 @@ def ask_play_again() -> bool:
         error("Please enter y or n.")
 
 
-def main() -> None:
-    """Run the game: play rounds until the player chooses to stop."""
+def main(
+    difficulty: Optional[str] = None,
+    max_attempts: Optional[int] = None,
+) -> None:
+    """Run the game: play rounds until the player chooses to stop.
+
+    Args:
+        difficulty: Fixed difficulty for every round, or None to ask.
+        max_attempts: Fixed attempt limit for every round, or None to
+            use each difficulty's default.
+    """
     info("Welcome to the Number Guessing Game!")
     while True:
-        play_round()
+        play_round(difficulty, max_attempts)
         if not ask_play_again():
             info("Thanks for playing. Goodbye!")
             break
