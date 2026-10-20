@@ -1,15 +1,22 @@
+"""Core gameplay for the Number Guessing Game."""
+
 import random
 
 from scores import get_best_score, update_best_score
 
-DIFFICULTIES = {
+DIFFICULTIES: dict[str, dict[str, int]] = {
     "easy": {"upper_bound": 50, "max_attempts": 10},
     "medium": {"upper_bound": 100, "max_attempts": 7},
     "hard": {"upper_bound": 500, "max_attempts": 9},
 }
 
 
-def choose_difficulty():
+def choose_difficulty() -> str:
+    """Prompt the player to pick a difficulty until the choice is valid.
+
+    Returns:
+        The difficulty name: "easy", "medium", or "hard".
+    """
     print("Choose a difficulty:")
     print("  1. Easy   (1-50)")
     print("  2. Medium (1-100)")
@@ -23,11 +30,20 @@ def choose_difficulty():
         print("Please enter 1, 2, or 3.")
 
 
-def pick_number(upper_bound):
+def pick_number(upper_bound: int) -> int:
+    """Pick a random secret number between 1 and upper_bound (inclusive)."""
     return random.randint(1, upper_bound)
 
 
-def get_guess(upper_bound):
+def get_guess(upper_bound: int) -> int:
+    """Prompt until the player enters a valid whole number in range.
+
+    Args:
+        upper_bound: The highest allowed guess. The lowest is always 1.
+
+    Returns:
+        A validated guess between 1 and upper_bound, inclusive.
+    """
     while True:
         raw = input("Your guess: ").strip()
 
@@ -48,7 +64,17 @@ def get_guess(upper_bound):
         return guess
 
 
-def check_guess(guess, secret_number):
+def check_guess(guess: int, secret_number: int) -> str:
+    """Compare a guess with the secret number.
+
+    Args:
+        guess: The player's guess.
+        secret_number: The number the computer picked.
+
+    Returns:
+        "low" if the guess is too small, "high" if too big,
+        or "correct" if it matches.
+    """
     if guess < secret_number:
         return "low"
     elif guess > secret_number:
@@ -57,7 +83,8 @@ def check_guess(guess, secret_number):
         return "correct"
 
 
-def play_round():
+def play_round() -> None:
+    """Play one full round: choose difficulty, then guess until win or loss."""
     difficulty = choose_difficulty()
     settings = DIFFICULTIES[difficulty]
     upper_bound = settings["upper_bound"]
@@ -93,7 +120,13 @@ def play_round():
 
     print(f"Out of attempts! The number was {secret_number}.")
 
-def ask_play_again():
+
+def ask_play_again() -> bool:
+    """Ask whether to play another round.
+
+    Returns:
+        True for yes, False for no. Re-prompts on anything else.
+    """
     while True:
         answer = input("Play again? (y/n): ").strip().lower()
         if answer in ("y", "yes"):
@@ -103,7 +136,8 @@ def ask_play_again():
         print("Please enter y or n.")
 
 
-def main():
+def main() -> None:
+    """Run the game: play rounds until the player chooses to stop."""
     print("Welcome to the Number Guessing Game!")
     while True:
         play_round()
