@@ -1,3 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "number-guessing-game"
+version = "0.1.0"
+description = "A command-line number guessing game with difficulty levels, attempt limits, and persistent high scores."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["colorama>=0.4.6"]
+
+[project.scripts]
+guessing-game = "guessing_game.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src/guessing_game"]
+pythonpath = ["src"]

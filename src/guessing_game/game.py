@@ -2,8 +2,8 @@
 
 import random
 
-from scores import get_best_score, update_best_score
-from ui import error, info, success, warning
+from guessing_game.scores import get_best_score, update_best_score
+from guessing_game.ui import error, info, success, warning
 
 DIFFICULTIES: dict[str, dict[str, int]] = {
     "easy": {"upper_bound": 50, "max_attempts": 10},

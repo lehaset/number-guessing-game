@@ -2,7 +2,7 @@
 
 import pytest
 
-from game import check_guess, get_guess, pick_number
+from guessing_game.game import check_guess, get_guess, pick_number
 
 
 @pytest.mark.parametrize(

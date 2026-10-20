@@ -2,7 +2,7 @@
 
 import pytest
 
-import scores
+from guessing_game import scores
 
 
 @pytest.fixture(autouse=True)
