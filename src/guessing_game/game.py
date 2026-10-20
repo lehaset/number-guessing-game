@@ -20,10 +20,12 @@ def check_guess(guess, secret_number):
 
 def main():
     secret_number = pick_number()
+    attempts = 0
     print("I'm thinking of a number between 1 and 100.")
 
     while True:
         guess = get_guess()
+        attempts += 1
         result = check_guess(guess, secret_number)
 
         if result == "low":
@@ -31,7 +33,7 @@ def main():
         elif result == "high":
             print("Too high!")
         else:
-            print("You got it!")
+            print(f"You got it in {attempts} attempts!")
             break
 
 
