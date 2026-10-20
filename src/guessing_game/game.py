@@ -1,5 +1,7 @@
 import random
 
+from scores import get_best_score, update_best_score
+
 DIFFICULTIES = {
     "easy": {"upper_bound": 50, "max_attempts": 10},
     "medium": {"upper_bound": 100, "max_attempts": 7},
@@ -65,6 +67,9 @@ def play_round():
     attempts = 0
     print(f"I'm thinking of a number between 1 and {upper_bound}.")
     print(f"You have {max_attempts} attempts.")
+    best = get_best_score(difficulty)
+    if best is not None:
+        print(f"Best score on {difficulty}: {best}")
 
     while attempts < max_attempts:
         guess = get_guess(upper_bound)
@@ -78,6 +83,8 @@ def play_round():
         else:
             word = "attempt" if attempts == 1 else "attempts"
             print(f"You got it in {attempts} {word}!")
+            if update_best_score(difficulty, attempts):
+                print("New high score!")
             return
 
         remaining = max_attempts - attempts
